@@ -50,13 +50,14 @@ const App = () => {
       blogService.setToken(user.token);
       setUser(user);
       setUsername('');
-      setPassword('');
     } catch {
       setNotification({ text: 'Wrong credentials', type: 'error' });
       setTimeout(() => {
         setNotification(null);
       }, 5000);
     }
+
+    setPassword('');
   };
 
   const handleLogout = async (event) => {
@@ -102,13 +103,14 @@ const App = () => {
       .deleteBlog(id)
       .then(() => {
         setBlogs(blogs.filter(blog => blog.id !== id));
+        setNotification({ text: 'deleted note', type: 'success' });
       })
       .catch(() => {
         setNotification({ text: 'error deleting note', type: 'error' });
-        setTimeout(() => {
-          setNotification(null);
-        }, 5000);
       })
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
   };
 
   return (
