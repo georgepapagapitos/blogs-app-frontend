@@ -89,6 +89,17 @@ const App = () => {
       });
   };
 
+  const deleteBlog = (id) => {
+    blogService
+      .deleteBlog(id)
+      .then(() => {
+        setBlogs(blogs.filter(blog => blog.id !== id));
+      })
+      .catch(() => {
+        setErrorMessage('error deleting note');
+      })
+  };
+
   return (
     <div>
       <Header user={user} handleLogout={handleLogout} />
@@ -104,7 +115,7 @@ const App = () => {
       }
       {user !== null && <>
         <AddBlogForm title={title} setTitle={setTitle} author={author} setAuthor={setAuthor} url={url} setUrl={setUrl} addBlog={addBlog} />
-        <BlogList blogs={blogs} user={user} />
+        <BlogList blogs={blogs} user={user} deleteBlog={deleteBlog} />
       </>}
     </div>
   );
