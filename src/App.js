@@ -11,7 +11,7 @@ import loginService from './services/login';
 
 const App = () => {
 
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [notification, setNotification] = useState(null);
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -52,9 +52,9 @@ const App = () => {
       setUsername('');
       setPassword('');
     } catch {
-      setErrorMessage('Wrong credentials');
+      setNotification({ text: 'Wrong credentials', type: 'error' });
       setTimeout(() => {
-        setErrorMessage(null);
+        setNotification(null);
       }, 5000);
     }
   };
@@ -64,7 +64,10 @@ const App = () => {
       window.localStorage.removeItem('loggedInUser');
       setUser(null);
     } catch {
-      setErrorMessage('Error logging out');
+      setNotification({ text: 'Error logging out', type: 'error' });
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
     };
   };
 
@@ -79,14 +82,19 @@ const App = () => {
     blogService
       .addBlog(blogObject)
       .then(response => {
+        setNotification({ text: `added ${response.title} by ${response.author}`, type: 'success' })
         setBlogs(blogs.concat(response));
         setTitle('');
         setAuthor('');
         setUrl('');
       })
       .catch(error => {
-        setErrorMessage(error.message);
+        setNotification({ text: 'error adding blog', type: 'error' });
       });
+
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
   };
 
   const deleteBlog = (id) => {
@@ -96,14 +104,17 @@ const App = () => {
         setBlogs(blogs.filter(blog => blog.id !== id));
       })
       .catch(() => {
-        setErrorMessage('error deleting note');
+        setNotification({ text: 'error deleting note', type: 'error' });
+        setTimeout(() => {
+          setNotification(null);
+        }, 5000);
       })
   };
 
   return (
     <div>
       <Header user={user} handleLogout={handleLogout} />
-      <Notification message={errorMessage} />
+      <Notification notification={notification} />
       {user === null &&
         <LoginForm
           handleLogin={handleLogin}
