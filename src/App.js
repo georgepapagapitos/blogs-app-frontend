@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react';
+
+import Header from './components/Header';
 import Notification from './components/Notification';
 import LoginForm from './components/LoginForm';
 import BlogList from './components/BlogList';
+import AddBlogForm from './components/AddBlogForm';
+
 import blogService from './services/blogs';
 import loginService from './services/login';
 
@@ -12,6 +16,9 @@ const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [url, setUrl] = useState('');
 
   useEffect(() => {
     blogService.getAllBlogs()
@@ -27,7 +34,7 @@ const App = () => {
       setUser(user);
       blogService.setToken(user.token);
     }
-  }, [])
+  }, []);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -50,7 +57,7 @@ const App = () => {
         setErrorMessage(null);
       }, 5000);
     }
-  }
+  };
 
   const handleLogout = async (event) => {
     try {
@@ -58,11 +65,33 @@ const App = () => {
       setUser(null);
     } catch {
       setErrorMessage('Error logging out');
-    }
-  }
+    };
+  };
+
+  const addBlog = (event) => {
+    event.preventDefault();
+    const blogObject = {
+      title,
+      author,
+      url
+    };
+
+    blogService
+      .addBlog(blogObject)
+      .then(response => {
+        setBlogs(blogs.concat(response));
+        setTitle('');
+        setAuthor('');
+        setUrl('');
+      })
+      .catch(error => {
+        setErrorMessage(error.message);
+      });
+  };
 
   return (
     <div>
+      <Header user={user} handleLogout={handleLogout} />
       <Notification message={errorMessage} />
       {user === null &&
         <LoginForm
@@ -73,9 +102,12 @@ const App = () => {
           setPassword={setPassword}
         />
       }
-      {user !== null && <BlogList blogs={blogs} user={user} handleLogout={handleLogout} />}
+      {user !== null && <>
+        <AddBlogForm title={title} setTitle={setTitle} author={author} setAuthor={setAuthor} url={url} setUrl={setUrl} addBlog={addBlog} />
+        <BlogList blogs={blogs} user={user} />
+      </>}
     </div>
   );
-}
+};
 
 export default App;
