@@ -79,19 +79,21 @@ const App = () => {
     }, 5000);
   };
 
-  const deleteBlog = (id) => {
-    blogService
-      .deleteBlog(id)
-      .then(() => {
-        setBlogs(blogs.filter(blog => blog.id !== id));
-        setNotification({ text: 'deleted blog', type: 'success' });
-      })
-      .catch(() => {
-        setNotification({ text: 'error deleting blog', type: 'error' });
-      })
-    setTimeout(() => {
-      setNotification(null);
-    }, 5000);
+  const deleteBlog = (blogObject) => {
+    if (window.confirm(`do you want to delete ${blogObject.title}`)) {
+      blogService
+        .deleteBlog(blogObject.id)
+        .then(() => {
+          setBlogs(blogs.filter(blog => blog.id !== blogObject.id));
+          setNotification({ text: 'deleted blog', type: 'success' });
+        })
+        .catch(() => {
+          setNotification({ text: 'error deleting blog', type: 'error' });
+        })
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+    }
   };
 
   const loginForm = () => (
@@ -131,7 +133,7 @@ const App = () => {
       }
       {user !== null && <>
         {addBlogForm()}
-        <BlogList blogs={blogs} user={user} deleteBlog={deleteBlog} likeBlog={likeBlog} />
+        <BlogList user={user} blogs={blogs} deleteBlog={deleteBlog} likeBlog={likeBlog} />
       </>}
     </div>
   );

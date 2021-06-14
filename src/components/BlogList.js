@@ -1,11 +1,11 @@
 import Blog from './Blog';
 
-const BlogList = ({ blogs, deleteBlog, likeBlog }) => {
+const BlogList = ({ blogs, deleteBlog, likeBlog, user }) => {
 
   return (
     <div>
       <ul>
-        {blogs.sort((a, b) => b.likes - a.likes).map(blog => <Blog key={blog.id} blog={blog} deleteBlog={deleteBlog} likeBlog={likeBlog} />)}
+        {blogs.sort((a, b) => b.likes - a.likes).map(blog => <Blog key={blog.id} user={user} blog={blog} deleteBlog={deleteBlog} likeBlog={likeBlog} />)}
       </ul>
     </div>
   );
