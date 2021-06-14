@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const Blog = ({ blog, deleteBlog }) => {
+const Blog = ({ blog, deleteBlog, likeBlog }) => {
 
   const blogStyle = {
     paddingTop: 10,
@@ -23,7 +23,7 @@ const Blog = ({ blog, deleteBlog }) => {
             <a href={blog.url}>{blog.url}</a>
           </div>
           <div>
-            {blog.likes} <button>like</button>
+            {blog.likes} <button onClick={() => likeBlog(blog)}>like</button>
           </div>
           <div>
             Posted by {blog.user.name}

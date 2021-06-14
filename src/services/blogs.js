@@ -24,8 +24,13 @@ const deleteBlog = async id => {
   }
   const response = await axios.delete(`${baseUrl}/${id}`, config);
   return response.data;
-}
+};
 
-const blogService = { getAllBlogs, setToken, addBlog, deleteBlog };
+const likeBlog = async blog => {
+  const response = await axios.put(`${baseUrl}/${blog.id}`, blog);
+  return response.data;
+};
+
+const blogService = { getAllBlogs, setToken, addBlog, deleteBlog, likeBlog };
 
 export default blogService;

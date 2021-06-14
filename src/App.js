@@ -87,7 +87,7 @@ const App = () => {
         setNotification({ text: 'deleted blog', type: 'success' });
       })
       .catch(() => {
-        setNotification({ text: 'error deleting note', type: 'error' });
+        setNotification({ text: 'error deleting blog', type: 'error' });
       })
     setTimeout(() => {
       setNotification(null);
@@ -108,6 +108,20 @@ const App = () => {
     </Toggle>
   )
 
+  const likeBlog = (blog) => {
+    blogService
+      .likeBlog(blog)
+      .then(response => {
+        setBlogs(blogs.map(blog => blog.id === response.id ? { ...blog.user, ...response } : { ...blog }))
+      })
+      .catch((err) => {
+        setNotification({ text: 'error liking blog', type: 'error' });
+        setTimeout(() => {
+          setNotification(null);
+        }, 5000);
+      });
+  }
+
   return (
     <div>
       <Header user={user} handleLogout={handleLogout} />
@@ -117,7 +131,7 @@ const App = () => {
       }
       {user !== null && <>
         {addBlogForm()}
-        <BlogList blogs={blogs} user={user} deleteBlog={deleteBlog} />
+        <BlogList blogs={blogs} user={user} deleteBlog={deleteBlog} likeBlog={likeBlog} />
       </>}
     </div>
   );
