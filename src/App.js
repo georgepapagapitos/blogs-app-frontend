@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import Header from './components/Header';
 import Notification from './components/Notification';
 import LoginForm from './components/LoginForm';
 import BlogList from './components/BlogList';
 import AddBlogForm from './components/AddBlogForm';
+import Toggle from './components/Toggle';
 
 import blogService from './services/blogs';
 import loginService from './services/login';
@@ -13,12 +14,7 @@ const App = () => {
 
   const [notification, setNotification] = useState(null);
   const [blogs, setBlogs] = useState([]);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [url, setUrl] = useState('');
 
   useEffect(() => {
     blogService.getAllBlogs()
@@ -36,28 +32,22 @@ const App = () => {
     }
   }, []);
 
-  const handleLogin = async (event) => {
-    event.preventDefault();
+  const login = async (username, password) => {
     try {
       const user = await loginService.login({
         username, password
       });
-
+      blogService.setToken(user.token);
       window.localStorage.setItem(
         'loggedInUser', JSON.stringify(user)
-      )
-
-      blogService.setToken(user.token);
+      );
       setUser(user);
-      setUsername('');
     } catch {
       setNotification({ text: 'Wrong credentials', type: 'error' });
       setTimeout(() => {
         setNotification(null);
       }, 5000);
     }
-
-    setPassword('');
   };
 
   const handleLogout = async (event) => {
@@ -72,22 +62,13 @@ const App = () => {
     };
   };
 
-  const addBlog = (event) => {
-    event.preventDefault();
-    const blogObject = {
-      title,
-      author,
-      url
-    };
-
+  const addBlog = (blogObject) => {
+    blogFormRef.current.toggleVisibility();
     blogService
       .addBlog(blogObject)
       .then(response => {
         setNotification({ text: `added ${response.title} by ${response.author}`, type: 'success' })
         setBlogs(blogs.concat(response));
-        setTitle('');
-        setAuthor('');
-        setUrl('');
       })
       .catch(error => {
         setNotification({ text: 'error adding blog', type: 'error' });
@@ -113,21 +94,29 @@ const App = () => {
     }, 5000);
   };
 
+  const loginForm = () => (
+    <Toggle buttonLabel="log in">
+      <LoginForm login={login} />
+    </Toggle>
+  )
+
+  const blogFormRef = useRef();
+
+  const addBlogForm = () => (
+    <Toggle buttonLabel="add a blog" ref={blogFormRef}>
+      <AddBlogForm addBlog={addBlog} />
+    </Toggle>
+  )
+
   return (
     <div>
       <Header user={user} handleLogout={handleLogout} />
       <Notification notification={notification} />
       {user === null &&
-        <LoginForm
-          handleLogin={handleLogin}
-          username={username}
-          setUsername={setUsername}
-          password={password}
-          setPassword={setPassword}
-        />
+        loginForm()
       }
       {user !== null && <>
-        <AddBlogForm title={title} setTitle={setTitle} author={author} setAuthor={setAuthor} url={url} setUrl={setUrl} addBlog={addBlog} />
+        {addBlogForm()}
         <BlogList blogs={blogs} user={user} deleteBlog={deleteBlog} />
       </>}
     </div>
