@@ -5,16 +5,15 @@ const LoginForm = ({ login }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = (event) => {
-    login({ username, password })
-      .then(() => {
-        console.log('log in successful');
-        setUsername('');
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-    setPassword('');
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    try {
+      login(username, password);
+      setUsername('');
+      setPassword('');
+    } catch (exception) {
+      console.error(exception);
+    }
   }
 
   return (

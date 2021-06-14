@@ -34,9 +34,9 @@ const App = () => {
 
   const login = async (username, password) => {
     try {
-      const user = await loginService.login({
-        username, password
-      });
+      const user = await loginService.login(
+        { username, password }
+      );
       blogService.setToken(user.token);
       window.localStorage.setItem(
         'loggedInUser', JSON.stringify(user)
@@ -84,7 +84,7 @@ const App = () => {
       .deleteBlog(id)
       .then(() => {
         setBlogs(blogs.filter(blog => blog.id !== id));
-        setNotification({ text: 'deleted note', type: 'success' });
+        setNotification({ text: 'deleted blog', type: 'success' });
       })
       .catch(() => {
         setNotification({ text: 'error deleting note', type: 'error' });
