@@ -22,7 +22,7 @@ const Blog = ({ blog, deleteBlog, likeBlog, user }) => {
   return (
     <div className='blog' style={blogStyle}>
       <div>
-        {blog.title} by {blog.author} <button onClick={() => setShowDetails(!showDetails)}>{showDetails ? 'hide' : 'view'}</button>
+        {blog.title} by {blog.author} <button className="detailsButton" onClick={() => setShowDetails(!showDetails)}>{showDetails ? 'hide' : 'view'}</button>
       </div>
       {showDetails &&
         <>
@@ -30,12 +30,12 @@ const Blog = ({ blog, deleteBlog, likeBlog, user }) => {
             <a href={blog.url}>{blog.url}</a>
           </div>
           <div>
-            {blog.likes} <button onClick={handleLike}>like</button>
+            {blog.likes} <button className="likeButton" onClick={handleLike}>like</button>
           </div>
           <div>
             Posted by {blog.user.name}
           </div>
-          {blog.user.username === user.username && <button onClick={() => deleteBlog(blog)}>delete</button>}
+          {blog.user.username === user.username && <button className="deleteButton" onClick={() => deleteBlog(blog)}>delete</button>}
         </>
       }
     </div>
