@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import Header from './components/Header';
 import Notification from './components/Notification';
@@ -42,7 +42,7 @@ const App = () => {
         'loggedInUser', JSON.stringify(user)
       );
       setUser(user);
-    } catch {
+    } catch (err) {
       setNotification({ text: 'Wrong credentials', type: 'error' });
       setTimeout(() => {
         setNotification(null);
@@ -50,16 +50,16 @@ const App = () => {
     }
   };
 
-  const handleLogout = async (event) => {
+  const handleLogout = () => {
     try {
       window.localStorage.removeItem('loggedInUser');
       setUser(null);
-    } catch {
+    } catch (err) {
       setNotification({ text: 'Error logging out', type: 'error' });
       setTimeout(() => {
         setNotification(null);
       }, 5000);
-    };
+    }
   };
 
   const addBlog = (blogObject) => {
@@ -67,10 +67,10 @@ const App = () => {
     blogService
       .addBlog(blogObject)
       .then(response => {
-        setNotification({ text: `added ${response.title} by ${response.author}`, type: 'success' })
+        setNotification({ text: `added ${response.title} by ${response.author}`, type: 'success' });
         setBlogs(blogs.concat(response));
       })
-      .catch(error => {
+      .catch(() => {
         setNotification({ text: 'error adding blog', type: 'error' });
       });
 
@@ -89,7 +89,7 @@ const App = () => {
         })
         .catch(() => {
           setNotification({ text: 'error deleting blog', type: 'error' });
-        })
+        });
       setTimeout(() => {
         setNotification(null);
       }, 5000);
@@ -100,7 +100,7 @@ const App = () => {
     <Toggle buttonLabel="log in">
       <LoginForm login={login} />
     </Toggle>
-  )
+  );
 
   const blogFormRef = useRef();
 
@@ -108,21 +108,21 @@ const App = () => {
     <Toggle buttonLabel="add a blog" ref={blogFormRef}>
       <AddBlogForm addBlog={addBlog} />
     </Toggle>
-  )
+  );
 
-  const likeBlog = (blog) => {
+  const likeBlog = (id, blogObject) => {
     blogService
-      .likeBlog(blog)
+      .likeBlog(id, blogObject)
       .then(response => {
-        setBlogs(blogs.map(blog => blog.id === response.id ? { ...blog.user, ...response } : { ...blog }))
+        console.log(response);
       })
-      .catch((err) => {
+      .catch(() => {
         setNotification({ text: 'error liking blog', type: 'error' });
         setTimeout(() => {
           setNotification(null);
         }, 5000);
       });
-  }
+  };
 
   return (
     <div>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 const Blog = ({ blog, deleteBlog, likeBlog, user }) => {
 
@@ -8,6 +8,13 @@ const Blog = ({ blog, deleteBlog, likeBlog, user }) => {
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5
+  };
+
+  const handleLike = async event => {
+    event.preventDefault();
+    const likes = blog.likes + 1;
+    const newBlog = { ...blog, likes };
+    await likeBlog(blog.id, newBlog);
   };
 
   const [showDetails, setShowDetails] = useState(false);
@@ -23,7 +30,7 @@ const Blog = ({ blog, deleteBlog, likeBlog, user }) => {
             <a href={blog.url}>{blog.url}</a>
           </div>
           <div>
-            {blog.likes} <button onClick={() => likeBlog(blog)}>like</button>
+            {blog.likes} <button onClick={handleLike}>like</button>
           </div>
           <div>
             Posted by {blog.user.name}

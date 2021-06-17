@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 const LoginForm = ({ login }) => {
@@ -15,7 +15,7 @@ const LoginForm = ({ login }) => {
     } catch (exception) {
       console.error(exception);
     }
-  }
+  };
 
   return (
     <form onSubmit={handleLogin}>
@@ -29,7 +29,7 @@ const LoginForm = ({ login }) => {
       </div>
       <button>login</button>
     </form>
-  )
+  );
 };
 
 LoginForm.propTypes = {

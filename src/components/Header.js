@@ -1,3 +1,5 @@
+import React from 'react';
+
 const Header = ({ user, handleLogout }) => (
   user === null ?
     <h1>log in to application</h1>
