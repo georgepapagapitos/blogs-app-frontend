@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
 const Blog = ({ blog, deleteBlog, likeBlog, user }) => {
-
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -10,7 +9,7 @@ const Blog = ({ blog, deleteBlog, likeBlog, user }) => {
     marginBottom: 5
   };
 
-  const handleLike = async event => {
+  const handleLike = async (event) => {
     event.preventDefault();
     const likes = blog.likes + 1;
     const newBlog = { ...blog, likes };

@@ -113,8 +113,8 @@ const App = () => {
   const likeBlog = (id, blogObject) => {
     blogService
       .likeBlog(id, blogObject)
-      .then(response => {
-        console.log(response);
+      .then(() => {
+        setBlogs(blogs.map(blog => blog.id === blogObject.id ? blogObject : blog));
       })
       .catch(() => {
         setNotification({ text: 'error liking blog', type: 'error' });

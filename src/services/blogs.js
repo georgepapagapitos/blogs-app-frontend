@@ -27,8 +27,8 @@ const deleteBlog = async id => {
 };
 
 const likeBlog = async (id, newObject) => {
-  const request = await axios.put(`${baseUrl}/${id}`, newObject);
-  return request.then(response => response.data);
+  const response = await axios.put(`${baseUrl}/${id}`, newObject);
+  return response.data;
 };
 
 const blogService = { getAllBlogs, setToken, addBlog, deleteBlog, likeBlog };
