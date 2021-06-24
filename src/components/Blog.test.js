@@ -58,7 +58,7 @@ describe('<Blog />', () => {
 
   test('if the like button is clicked twice, the event handler component is called twice', () => {
     fireEvent.click(component.container.querySelector('.detailsButton'));
-    const likeButton = component.container.querySelector('.likeButton');
+    const likeButton = component.container.querySelector('.like-button');
     fireEvent.click(likeButton);
     fireEvent.click(likeButton);
     expect(mockHandler.mock.calls).toHaveLength(2);

@@ -45,19 +45,36 @@ describe('Blog app', function () {
       cy.login({ username: 'gpapagapitos', password: 'password' });
     });
 
-    it('a new blog can be posted', function () {
+    describe('and a blog exists', function () {
+      beforeEach(function () {
+        cy.createBlog({ title: 'blog one', author: 'author one', url: 'http://www.google.com' });
+      });
+
+      it('the blog details can be viewed', function () {
+        cy.contains('view').click();
+      });
+
+      it('the blog can be liked', function () {
+        cy.contains('view').click();
+        cy.get('.like-button').click();
+        cy.get('.blog-likes')
+          .should('contain', '1');
+      });
+
+      it('the blog can be deleted', function () {
+        cy.contains('view').click();
+        cy.get('.delete-button').click();
+        cy.get('.success').should('contain', 'deleted blog');
+      });
+    });
+
+    it('a blog can be created', function () {
       cy.contains('add a blog').click();
       cy.get('#title-input').type('a blog posted by cypress');
       cy.get('#author-input').type('author of blog');
       cy.get('#url-input').type('http://www.google.com');
       cy.contains('add blog').click();
       cy.contains('a blog posted by cypress');
-    });
-
-    describe('and a blog exists', function () {
-      beforeEach(function () {
-        cy.contains('a blog posted by cypress');
-      });
     });
   });
 });
