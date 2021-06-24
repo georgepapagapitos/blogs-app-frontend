@@ -36,18 +36,13 @@ describe('Blog app', function () {
       cy.get('.error')
         .should('contain', 'Wrong credentials')
         .and('have.css', 'color', 'rgb(255, 0, 0)');
-      cy.get('html').should('not.contain', 'George Papagapitos logged in')
+      cy.get('html').should('not.contain', 'George Papagapitos logged in');
     });
   });
 
   describe('when logged in', function () {
     beforeEach(function () {
-      cy.request('POST', 'http://localhost:3003/api/login', {
-        username: 'gpapagapitos', password: 'password'
-      }).then(response => {
-        localStorage.setItem('loggedInUser', JSON.stringify(response.body));
-        cy.visit('http://localhost:3000');
-      });
+      cy.login({ username: 'gpapagapitos', password: 'password' });
     });
 
     it('a new blog can be posted', function () {
